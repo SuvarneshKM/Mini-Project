@@ -22,9 +22,10 @@ void setup()
   
 }
 
-void sendTemps()
+void send()
 {
   sensor = analogRead(A0);
+  sensor = (sensor/1023) * 100;
   Blynk.virtualWrite(V2, sensor);
   delay(1000);
 }
@@ -38,7 +39,7 @@ BLYNK_WRITE(V4){  // This function gets called each time something changes on th
 void loop()
 {
   Blynk.run();
-  sendTemps();
+  send();
 
   if(sensor<value){
     Serial.println("Dry : Turning on Motor");
