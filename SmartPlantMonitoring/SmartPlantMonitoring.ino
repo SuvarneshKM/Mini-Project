@@ -1,16 +1,14 @@
-// Viral Science www.viralsciencecreativity.com www.youtube.com/c/viralscience
-// IOT Smart Plant Monitoring System
 #define BLYNK_PRINT Serial
 #include <SPI.h>
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 
-char auth[] = "-------";              //Authentication code sent by Blynk
-char ssid[] = "-----";                       //WiFi SSID
-char pass[] = "-----";                       //WiFi Password
+char auth[] = "";              //Authentication code sent by Blynk
+char ssid[] = "";                       //WiFi SSID
+char pass[] = "";                       //WiFi Password
 
 int sensor = 0;
-int value = 0;
+int value = 50;
 int motorPin = D5;
 
 void setup()
@@ -25,7 +23,10 @@ void setup()
 void send()
 {
   sensor = analogRead(A0);
-  sensor = (sensor/1023) * 100;
+  sensor = abs(1024 - sensor);
+  sensor = map(sensor, 0, 450, 0, 100);
+  Serial.print("sensor : ");
+  Serial.println(sensor);
   Blynk.virtualWrite(V2, sensor);
   delay(1000);
 }
@@ -43,14 +44,13 @@ void loop()
 
   if(sensor<value){
     Serial.println("Dry : Turning on Motor");
-    digitalWrite(motorPin, HIGH);
+    digitalWrite(motorPin, !HIGH);
     Blynk.virtualWrite(V7, "Motor : ON");
-    
     
   }
   else{
     Serial.println("Turning off Motor");
-    digitalWrite(motorPin, LOW);
+    digitalWrite(motorPin, !LOW);
     Blynk.virtualWrite(V7, "Motor : OFF");
     
   }
