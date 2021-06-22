@@ -8,7 +8,7 @@ char ssid[] = "";                       //WiFi SSID
 char pass[] = "";                       //WiFi Password
 
 int sensor = 0;
-int value = 50;
+int value = 0;
 int motorPin = D5;
 
 void setup()
@@ -17,14 +17,14 @@ void setup()
   delay(100);
   Blynk.begin(auth, ssid, pass);
   pinMode(motorPin, OUTPUT);
-  
+  digitalWrite(motorPin, !LOW);
 }
 
 void send()
 {
   sensor = analogRead(A0);
   sensor = abs(1024 - sensor);
-  sensor = map(sensor, 0, 450, 0, 100);
+  sensor = map(sensor, 0, 650, 0, 100);
   Serial.print("sensor : ");
   Serial.println(sensor);
   Blynk.virtualWrite(V2, sensor);
